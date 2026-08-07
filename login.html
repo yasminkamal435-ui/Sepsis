@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول — SepsisWatch</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="auth-shell">
+  <div class="auth-visual">
+    <a href="index.html" class="brand" style="color:#fff;">
+      <svg class="brand-mark" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="16" stroke="#60A5FA" stroke-width="2"/><path d="M6 17h4l2.5-7 4 14 2.5-9 2 2H28" stroke="#60A5FA" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>SepsisWatch
+    </a>
+    <div>
+      <h2 style="color:#fff;font-size:28px;line-height:1.5;" data-i18n-html="login_visual_h">كل ثانية بتفرق<br>في اكتشاف الإنتان مبكرًا</h2>
+      <p style="color:#AFC0CE;margin-top:16px;line-height:1.8;max-width:380px;" data-i18n="login_visual_p">اكتب اسمك وابدأ فورًا — الموقع بيفتكر تفضيلاتك وحالاتك اللي حللتها في كل مرة تدخل.</p>
+
+      <div class="monitor-illustration" style="margin-top:32px;max-width:380px;">
+        <div class="m-row">
+          <div><div class="m-label">HR</div><div class="m-num" id="mHR">—</div></div>
+          <div><div class="m-label">MAP</div><div class="m-num" id="mMAP">—</div></div>
+          <div><div class="m-label">SpO₂</div><div class="m-num" id="mSpo2">—</div></div>
+        </div>
+        <svg viewBox="0 0 340 60" width="100%" height="60">
+          <polyline points="0,32 30,32 40,10 50,50 60,20 70,32 130,32 140,8 150,52 160,18 170,32 230,32 240,12 250,48 260,22 270,32 340,32"fill="none" stroke="#60A5FA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <p style="color:#6C8398;font-size:12.5px;" data-i18n="login_disclaimer">مشروع تعليمي/بحثي — البيانات المعروضة هنا تجريبية بالكامل.</p>
+  </div>
+
+  <div class="auth-form-side">
+    <div class="auth-box">
+      <div class="lang-toggle" id="langToggle" style="margin-bottom:22px;width:fit-content;">
+        <span data-lang="ar">AR</span><span data-lang="en">EN</span>
+      </div>
+      <h1 data-i18n="login_title">أهلًا بيك</h1>
+      <p class="sub" data-i18n="login_sub">اكتب اسمك، وهتدخل على طول لمحلل حالتك الشخصي.</p>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="uname" data-i18n="login_name_label">الاسم</label>
+          <input id="uname" type="text" data-i18n-placeholder="login_name_ph" placeholder="اكتب اسمك بالكامل" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;" data-i18n="login_submit">ابدأ الآن</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script src="i18n.js"></script>
+<script>document.getElementById('loginForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const name = document.getElementById('uname').value.trim();
+    if(!name) return;
+    Store.user = name; Store.role = 'patient';
+    window.location.href = 'dashboard.html';
+  });
+
+  document.getElementById('langToggle').addEventListener('click', (e)=>{
+    const span = e.target.closest('span'); if(!span) return;
+    Store.lang = span.dataset.lang;
+    applyI18n(Store.lang);
+  });
+
+  // نبض بسيط لأرقام الشاشة التوضيحية — تجميلي بحت، مفيش أي بيانات حقيقية هنا
+  function jitter(el, base, spread, decimals){
+    el.textContent = (base + (Math.random()*spread - spread/2)).toFixed(decimals);
+  }
+  function tickMonitor(){
+    jitter(document.getElementById('mHR'), 82, 6, 0);
+    jitter(document.getElementById('mMAP'), 78, 4, 0);
+    jitter(document.getElementById('mSpo2'), 97, 1.5, 0);
+  }
+  tickMonitor();
+  setInterval(tickMonitor, 2200);
+</script>
+</body>
+</html>

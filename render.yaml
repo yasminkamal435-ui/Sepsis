@@ -1,0 +1,20 @@
+# render.yaml — نشر SepsisWatch على Render.com
+# ارفعي المشروع لريبو GitHub، بعدين من Render: New → Blueprint → اختاري الريبو،
+# هيقرأ الملف ده تلقائيًا وينشئ الخدمتين.
+
+services:
+  - type: web
+    name: sepsiswatch-api
+    env: docker
+    dockerfilePath: ./Dockerfile.api
+    plan: free
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    healthCheckPath: /health
+
+  - type: web
+    name: sepsiswatch-web
+    env: docker
+    dockerfilePath: ./Dockerfile.web
+    plan: free

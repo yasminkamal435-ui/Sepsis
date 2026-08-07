@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الداشبورد - SepsisWatch</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <svg width="26" height="26" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="16" stroke="#60A5FA" stroke-width="2"/><path d="M6 17h4l2.5-7 4 14 2.5-9 2 2H28" stroke="#60A5FA" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      SepsisWatch
+    </div>
+    <div class="side-section-label">-</div>
+    <a href="dashboard.html" class="side-link active"><span class="icon" id="i1"></span><span data-i18n="side_overview">نظرة عامة</span></a>
+    <a href="analyzer.html" class="side-link"><span class="icon" id="i2"></span><span data-i18n="side_analyzer">محلل الحالة</span></a>
+    <a href="patients.html" class="side-link"><span class="icon" id="i3"></span><span data-i18n="side_patients">قائمة المرضى</span></a>
+    <div class="side-section-label">-</div>
+    <a href="admin.html" class="side-link"><span class="icon" id="i4"></span><span data-i18n="side_admin">المراقبة الإدارية</span></a>
+    <a href="settings.html" class="side-link"><span class="icon" id="i5"></span><span data-i18n="side_settings">الإعدادات</span></a>
+    <a href="about.html" class="side-link"><span class="icon" id="i6"></span><span data-i18n="side_about">عن المشروع</span></a>
+    <div class="sidebar-footer">
+      <a href="login.html" class="side-link" id="logoutBtn"><span class="icon" id="i7"></span><span data-i18n="side_logout">تسجيل الخروج</span></a>
+    </div>
+  </aside>
+
+  <div>
+    <header class="topbar">
+      <div class="search-box">
+        <span class="icon" id="i8"></span>
+        <input type="text" data-i18n-placeholder="search_ph" placeholder="ابحث عن مريض...">
+      </div>
+      <div class="topbar-actions">
+        <div class="lang-toggle" id="langToggle"><span data-lang="ar">AR</span><span data-lang="en">EN</span></div>
+        <button class="icon-btn" id="themeBtn"><span class="icon" id="i9"></span></button>
+        <a href="settings.html" class="avatar" id="avatarBubble" style="text-decoration:none;">?</a>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="page-head">
+        <div>
+          <h1 id="greeting"></h1>
+          <p id="roleLine">-</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;">
+          <svg width="72" height="52" viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+            <rect x="4" y="4" width="112" height="82" rx="12" fill="var(--teal-100)"/>
+            <polyline points="14,55 32,55 38,32 46,66 54,40 62,55 106,55" fill="none" stroke="var(--teal-500)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="38" cy="32" r="3.5" fill="var(--teal-500)"/>
+          </svg>
+          <a href="analyzer.html" class="btn btn-primary" data-i18n="empty_my_cta">تحليل مريض جديد</a>
+        </div>
+      </div>
+
+      <div id="hasDataView" style="display:none;">
+        <div class="kpi-grid">
+          <div class="card kpi-card">
+            <div class="label" data-i18n="kpi1">مرضى تم تحليلهم</div>
+            <div class="value" id="kpiActive">0</div>
+          </div>
+          <div class="card kpi-card">
+            <div class="label" data-i18n="kpi2">حالات خطر مرتفع</div>
+            <div class="value" style="color:var(--coral-500);" id="highCountKPI">0</div>
+          </div>
+          <div class="card kpi-card">
+            <div class="label" data-i18n="kpi_avg">متوسط درجة الخطورة</div>
+            <div class="value"><span id="kpiAvg">0</span><span style="font-size:15px;">%</span></div>
+          </div>
+          <div class="card kpi-card">
+            <div class="label" data-i18n="kpi_model">دقة النموذج المُدرَّب (AUROC)</div>
+            <div class="value"><span id="kpiAuroc">-</span></div>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="card panel">
+            <div class="panel-head">
+              <h3 data-i18n="panel_patients">مرضاي المُحلَّلون</h3>
+              <a href="patients.html" class="btn btn-ghost btn-sm" data-i18n="view_all">عرض الكل</a>
+            </div>
+            <div id="patientsList"></div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:20px;">
+            <div class="card panel" id="alertsWidget">
+              <div class="panel-head"><h3 data-i18n="panel_alerts">آخر التنبيهات</h3></div>
+              <div id="alertsFeed"></div>
+            </div>
+            <div class="card panel">
+              <div class="panel-head"><h3 data-i18n="panel_bedmap">خريطة الحالات الحية</h3></div>
+              <div id="bedMap" style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="learningPanelWrap" style="margin-top:20px;"></div>
+      </div>
+
+      <div id="emptyView" class="card panel empty-state" style="display:none;">
+        <svg width="130" height="100" viewBox="0 0 170 130" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto 18px;display:block;">
+          <rect x="10" y="15" width="150" height="100" rx="14" fill="var(--paper-100)" stroke="var(--line)"/>
+          <polyline points="26,90 50,90 60,60 72,105 84,70 96,90 144,90" fill="none" stroke="var(--teal-500)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
+          <circle cx="60" cy="60" r="3" fill="var(--teal-500)"/>
+        </svg>
+        <h3 data-i18n="empty_my_title">لسه ما حللتيش أي حالة</h3>
+        <p data-i18n="empty_my_sub">ابدئي بتحليل أول مريض عشان يظهر هنا</p>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;">
+          <a href="analyzer.html" class="btn btn-primary" data-i18n="empty_my_cta">تحليل مريض جديد</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="model_weights.js"></script>
+<script src="model_engine.js"></script>
+<script src="app.js"></script>
+<script src="i18n.js"></script>
+<script>
+requireAuth();
+
+['i1','i2','i3','i4','i5','i6','i7','i8'].forEach((id,idx)=>{
+  const map=[Icon.overview,Icon.activity,Icon.list,Icon.gear,Icon.gear,Icon.info,Icon.logout,Icon.search];
+  document.getElementById(id).innerHTML = map[idx];
+});
+document.getElementById('i9').innerHTML = Icon.moon;
+
+function renderHeader(){
+  const user = Store.user;
+  document.getElementById('greeting').textContent = `${t('greeting_prefix')} ${user}`;
+  document.getElementById('roleLine').textContent = t('role_line_prefix');
+  document.getElementById('avatarBubble').textContent = initials(user);
+}
+
+async function fetchAuroc(){
+  try{
+    const res = await fetch(`${window.API_BASE_URL}/survival_model_info`, {signal: AbortSignal.timeout(1500)});
+    const data = await res.json();
+    return data.test_auroc ? (data.test_auroc*100).toFixed(1)+'%' : '0.70';
+  }catch(e){ return '0.70'; }
+}
+
+function renderBedMap(patients){
+  const map = document.getElementById('bedMap');
+  map.innerHTML = patients.slice(0,18).map(p=>{
+    const cls = riskClass(p.probability);
+    const color = cls==='high' ? 'var(--coral-500)' : cls==='mid' ? 'var(--teal-500)' : 'var(--mint-500)';
+    const highClass = cls === 'high' ? 'pulse-ring' : '';
+    return `<div class="${highClass}" title="${p.name}" style="height:34px;border-radius:8px;background:${color};"></div>`;
+  }).join('');
+}
+
+async function render(){
+  const patients = getMyPatients();
+  document.getElementById('hasDataView').style.display = patients.length ? '' : 'none';
+  document.getElementById('emptyView').style.display = patients.length ? 'none' : '';
+  if(!patients.length) return;
+
+  const highCount = patients.filter(p=>riskClass(p.probability)==='high').length;
+  const avg = patients.reduce((s,p)=>s+p.probability,0)/patients.length;
+
+  countUp(document.getElementById('kpiActive'), patients.length);
+  countUp(document.getElementById('highCountKPI'), highCount);
+  countUp(document.getElementById('kpiAvg'), Math.round(avg*100));
+  document.getElementById('kpiAuroc').textContent = await fetchAuroc();
+
+  const list = document.getElementById('patientsList');
+  list.innerHTML = patients.slice(0,8).map(p=>{
+    const disp = toDisplayPatient(p, Store.lang);
+    const cls = riskClass(p.probability);
+    const color = cls==='high' ? '#111827' : cls==='mid' ? '#2563EB' : '#64748B';
+    const highClass = cls === 'high' ? 'pulse-ring' : '';
+    return `<a class="patient-row ${highClass}" href="patient_detail.html?id=${encodeURIComponent(p.id)}" style="text-decoration:none;">
+      <div class="p-avatar">${p.age}</div>
+      <div class="p-info"><b>${disp.name}</b><span>${disp.unit} - ${disp.bed}</span></div>
+      <div class="p-prob" style="color:${color};">${Math.round(p.probability*100)}%</div>
+      ${riskBadge(p.probability)}
+    </a>`;
+  }).join('');
+
+  const alerts = patients.filter(p=>riskClass(p.probability)!=='low').slice(0,6).map(p=>{
+    const cls = riskClass(p.probability);
+    const color = cls==='high' ? '#111827' : '#2563EB';
+    const disp = toDisplayPatient(p, Store.lang);
+    return `<div class="alert-item"><div class="alert-dot" style="background:${color};"></div>
+      <div><b>${disp.name}</b><span>${riskBadge(p.probability)}</span></div></div>`;
+  }).join('') || `<p style="color:var(--ink-500);font-size:14px;">${t('no_alerts')}</p>`;
+  document.getElementById('alertsFeed').innerHTML = alerts;
+
+  renderBedMap(patients);
+  document.getElementById('learningPanelWrap').innerHTML = personalizedInsightsHTML(Store.lang);
+}
+
+document.getElementById('logoutBtn').addEventListener('click', (e)=>{ e.preventDefault(); Store.logout(); window.location.href = 'login.html'; });
+document.getElementById('themeBtn').addEventListener('click', ()=>{ Store.theme = Store.theme === 'dark' ? 'light' : 'dark'; applyTheme(); });
+document.getElementById('langToggle').addEventListener('click', (e)=>{
+  const span = e.target.closest('span'); if(!span) return;
+  Store.lang = span.dataset.lang; applyI18n(Store.lang); renderHeader(); render();
+});
+
+applyTheme();
+applyI18n(Store.lang);
+renderHeader();
+render();
+</script>
+</body>
+</html>

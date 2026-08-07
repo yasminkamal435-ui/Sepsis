@@ -1,0 +1,23 @@
+{
+  "dataset": "Sepsis Survival Minimal Clinical Records (Chicco & Jurman, 2020)",
+  "dataset_license": "CC BY 4.0",
+  "dataset_doi": "10.1038/s41598-020-73558-3",
+  "n_train": 77142,
+  "n_val": 16531,
+  "n_test": 16531,
+  "test_auroc": 0.7033003473117172,
+  "test_accuracy": 0.5518722400338757,
+  "test_f1": 0.20344086021505375,
+  "external_validation_auroc": 0.5735619469026548,
+  "external_validation_n": 137,
+  "confusion_matrix": [
+    [
+      8177,
+      7138
+    ],
+    [
+      270,
+      946
+    ]
+  ]
+}

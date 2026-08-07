@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بطاقة النموذج — SepsisWatch</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <svg class="brand-mark" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="16" stroke="#2563EB" stroke-width="2"/><path d="M6 17h4l2.5-7 4 14 2.5-9 2 2H28" stroke="#2563EB" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      SepsisWatch
+    </a>
+    <div class="nav-links">
+      <a href="about.html" data-i18n="nav_about">عن المشروع</a>
+      <a href="model_card.html" data-i18n="nav_model_card">بطاقة النموذج</a>
+    </div>
+    <div class="nav-cta">
+      <div class="lang-toggle" id="langToggle"><span data-lang="ar">AR</span><span data-lang="en">EN</span></div>
+      <a href="login.html" class="btn btn-primary btn-sm" data-i18n="nav_cta">جرّب الداشبورد</a>
+    </div>
+  </div>
+</nav>
+
+<header class="section" style="padding-top:64px;">
+  <div class="container" style="max-width:820px;">
+    <span class="eyebrow" data-i18n="mc_eyebrow">بطاقة النموذج (Model Card)</span>
+    <h1 style="font-size:36px;margin-top:16px;color:var(--navy-900);" data-i18n="mc_h1">حالة النموذج بصراحة تامة</h1>
+    <p style="color:var(--ink-500);font-size:16px;line-height:1.9;margin-top:16px;" data-i18n="mc_intro">
+      توثيق بأسلوب Model Cards for Model Reporting (Mitchell et al., 2019) — بيوضّح إيه اللي اتعمل فعلًا، وإيه اللي لسه مطلوب، من غير أي مبالغة.
+    </p>
+  </div>
+</header>
+
+<section class="section" style="padding-top:10px;">
+  <div class="container" style="max-width:820px;">
+
+    <h2 style="font-size:20px;color:var(--navy-900);margin-bottom:14px;" data-i18n="mc_status_h">حالة التدريب الحالية</h2>
+    <div class="card" style="padding:22px;background:var(--paper-100);border-color:transparent;margin-bottom:32px;">
+      <p style="margin:0;color:var(--ink-700);line-height:1.9;" data-i18n="mc_status_p">
+        لا يوجد حاليًا نموذج مُدرَّب على بيانات حقيقية في هذا المستودع. الكود كامل ومُختبَر من ناحية الصحة البرمجية،
+        لكن ملفات الأوزان (models/*.pt) لازم تتولّد بتشغيل src/train.py على داتا PhysioNet الحقيقية بعد تنزيلها.
+      </p>
+    </div>
+
+    <h2 style="font-size:20px;color:var(--navy-900);margin-bottom:14px;" data-i18n="mc_arch_h">المعمارية</h2>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:32px;font-size:13.5px;">
+      <tbody id="archTable"></tbody>
+    </table>
+
+    <h2 style="font-size:20px;color:var(--navy-900);margin-bottom:14px;" data-i18n="mc_use_h">الاستخدام المقصود وحدوده</h2>
+    <div class="grid-2" style="margin-bottom:32px;">
+      <div class="feature-card">
+        <h3 style="font-size:15px;" data-i18n="mc_intended_h">الاستخدام المقصود</h3>
+        <p data-i18n="mc_intended_p">أداة تعليمية/بحثية لدعم القرار السريري، تُعرض كنموذج مرجعي معماري كامل — مش أداة تشخيص مستقلة.</p>
+      </div>
+      <div class="feature-card">
+        <h3 style="font-size:15px;" data-i18n="mc_out_h">خارج نطاق الاستخدام</h3>
+        <p data-i18n="mc_out_p">أي قرار سريري فعلي، أو استبدال تقييم الطاقم الطبي، أو استخدام بدون اعتماد تنظيمي ومراجعة أخلاقية.</p>
+      </div>
+    </div>
+
+    <h2 style="font-size:20px;color:var(--navy-900);margin-bottom:14px;" data-i18n="mc_ethics_h">اعتبارات أخلاقية</h2>
+    <ul style="color:var(--ink-700);line-height:2;padding-inline-start:20px;margin-bottom:32px;" id="ethicsList"></ul>
+
+    <div class="card" style="padding:22px;text-align:center;">
+      <p style="margin:0 0 14px;color:var(--ink-700);" data-i18n="mc_cta_p">لمعرفة خطة التحقق السريري الكاملة والمنهجية المقترحة:</p>
+      <a href="about.html" class="btn btn-primary btn-sm" data-i18n="mc_cta_btn">راجعي صفحة عن المشروع</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <span data-i18n="footer_line1">SepsisWatch © 2026</span>
+    <a href="index.html" class="btn btn-ghost btn-sm" data-i18n="back_home">العودة للرئيسية</a>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script src="i18n.js"></script>
+<script>
+  document.getElementById('langToggle').addEventListener('click', (e)=>{
+    const span = e.target.closest('span'); if(!span) return;
+    Store.lang = span.dataset.lang; applyI18n(Store.lang); renderTables();
+  });
+
+  function renderTables(){
+    const isEn = Store.lang === 'en';
+    const rows = isEn ? [
+      ["Temporal branch", "Bidirectional GRU (2 layers, hidden=128) + attention"],
+      ["Computer-vision branch", "Gramian Angular Field + Recurrence Plot \u2192 ResNet-style CNN"],
+      ["Fusion", "Concatenated embeddings \u2192 MLP (128\u219232\u21921)"],
+      ["Input window", "12 hours \u00d7 34 clinical variables"],
+      ["Prediction horizon", "6 hours ahead of clinical recognition"],
+      ["Class imbalance handling", "Weighted random sampler + focal loss"],
+      ["Explainability", "SHAP (GradientExplainer) or delta-based fallback"],
+      ["Training status", "Not yet trained on real data in this environment"],
+    ] : [
+      ["الفرع الزمني", "BiGRU (طبقتين، hidden=128) + Attention"],
+      ["فرع رؤية الحاسوب", "Gramian Angular Field + Recurrence Plot ← CNN بأسلوب ResNet"],
+      ["الدمج", "دمج الـ embeddings ← MLP (128←32←1)"],
+      ["نافذة الإدخال", "12 ساعة × 34 متغير سريري"],
+      ["أفق التنبؤ", "6 ساعات قبل التشخيص السريري"],
+      ["حل عدم توازن الفئات", "Weighted Random Sampler + Focal Loss"],
+      ["التفسير", "SHAP (GradientExplainer) أو تفسير بديل مبني على الاتجاه"],
+      ["حالة التدريب", "لم يتم تدريبه بعد على بيانات حقيقية في هذه البيئة"],
+    ];
+    document.getElementById('archTable').innerHTML = rows.map(([k,v],i)=>`
+      <tr style="border-bottom:1px solid var(--line);${i%2? 'background:var(--paper-50);':''}">
+        <td style="padding:10px 12px;font-weight:700;color:var(--navy-900);width:38%;">${k}</td>
+        <td style="padding:10px 12px;color:var(--ink-700);">${v}</td>
+      </tr>`).join('');
+
+    const ethics = isEn ? [
+      "Training data reflects two U.S. hospital systems; performance on other populations, age groups, or care settings is unverified.",
+      "The public benchmark itself showed a large generalization gap on an unseen hospital (score dropped from ~0.43 to -0.048) — a caution against assuming portability.",
+      "No demographic fairness audit (e.g., across sex, age, or reported race/ethnicity fields in the dataset) has been performed.",
+      "Any real deployment must include human-in-the-loop review; the system is designed as decision support, not decision automation.",
+    ] : [
+      "بيانات التدريب من مستشفيين أمريكيين فقط؛ الأداء على مجتمعات أو أعمار أو بيئات رعاية مختلفة غير مُتحقَّق منه.",
+      "المرجع الرسمي نفسه أظهر فجوة تعميم كبيرة على مستشفى غير مرئي أثناء التدريب (انخفضت النتيجة من ~0.43 إلى -0.048) — تحذير من افتراض قابلية النقل.",
+      "لم يتم إجراء تدقيق عدالة ديموغرافي (حسب الجنس، العمر، أو العرق المسجّل في البيانات).",
+      "أي نشر فعلي لازم يشمل مراجعة بشرية دائمًا؛ النظام مصمَّم كدعم قرار مش كأتمتة قرار.",
+    ];
+    document.getElementById('ethicsList').innerHTML = ethics.map(t=>`<li>${t}</li>`).join('');
+  }
+  applyI18n(Store.lang);
+  renderTables();
+</script>
+</body>
+</html>

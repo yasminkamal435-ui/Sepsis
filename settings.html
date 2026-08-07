@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الإعدادات — SepsisWatch</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <svg width="26" height="26" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="16" stroke="#60A5FA" stroke-width="2"/><path d="M6 17h4l2.5-7 4 14 2.5-9 2 2H28" stroke="#60A5FA" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>SepsisWatch
+    </div>
+    <div class="side-section-label">—</div>
+    <a href="dashboard.html" class="side-link" data-i18n="side_overview">نظرة عامة</a>
+    <a href="analyzer.html" class="side-link" data-i18n="side_analyzer">محلل الحالة</a>
+    <a href="dashboard.html#bedmap" class="side-link" data-i18n="side_bedmap">خريطة الأسرّة</a>
+    <a href="dashboard.html#alerts" class="side-link" data-i18n="side_alerts">التنبيهات</a>
+    <div class="side-section-label">—</div>
+    <a href="patients.html" class="side-link" data-i18n="side_patients">قائمة المرضى</a>
+    <a href="admin.html" class="side-link" data-i18n="side_admin">المراقبة الإدارية</a>
+    <div class="side-section-label">—</div>
+    <a href="settings.html" class="side-link active" data-i18n="side_settings">الإعدادات</a>
+    <a href="about.html" class="side-link" data-i18n="side_about">عن المشروع</a>
+    <div class="sidebar-footer">
+      <a href="login.html" class="side-link" id="logoutBtn" data-i18n="side_logout">تسجيل الخروج</a>
+    </div>
+  </aside>
+
+  <div>
+    <header class="topbar">
+      <div></div>
+      <div class="topbar-actions">
+        <div class="lang-toggle" id="langToggle"><span data-lang="ar">AR</span><span data-lang="en">EN</span></div>
+        <div class="avatar" id="avatarBubble">؟</div>
+      </div>
+    </header>
+
+    <main class="main" style="max-width:640px;">
+      <div class="page-head">
+        <div>
+          <h1 data-i18n="settings_h1">الإعدادات</h1>
+          <p data-i18n="settings_sub">خصّص تجربتك في SepsisWatch</p>
+        </div>
+      </div>
+
+      <div class="card panel" style="margin-bottom:20px;">
+        <div class="panel-head"><h3 data-i18n="settings_profile">الملف الشخصي</h3></div>
+        <div class="field" style="margin-bottom:0;">
+          <label data-i18n="settings_display_name">الاسم الظاهر</label>
+          <input id="setName" type="text">
+        </div>
+      </div>
+
+      <div class="card panel" style="margin-bottom:20px;">
+        <div class="panel-head"><h3 data-i18n="settings_prefs">تفضيلات الواجهة</h3></div>
+        <ul class="widget-list">
+          <li><span data-i18n="settings_theme">الوضع الداكن</span><div class="toggle" id="setThemeToggle"></div></li>
+          <li><span data-i18n="settings_lang">اللغة</span>
+            <div class="lang-toggle" id="langToggle2"><span data-lang="ar">AR</span><span data-lang="en">EN</span></div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card panel" style="margin-bottom:20px;">
+        <div class="panel-head"><h3 data-i18n="settings_notifs">إشعارات</h3></div>
+        <ul class="widget-list">
+          <li><span data-i18n="settings_notif_high">تنبيه فوري عند خطر مرتفع</span><div class="toggle on" id="notifHigh"></div></li>
+          <li><span data-i18n="settings_notif_mid">تنبيه عند خطر متوسط</span><div class="toggle on" id="notifMid"></div></li>
+          <li><span data-i18n="settings_notif_digest">ملخص يومي بالبريد</span><div class="toggle" id="notifDigest"></div></li>
+        </ul>
+      </div>
+
+      <button class="btn btn-primary" id="saveBtn" data-i18n="settings_save">حفظ التغييرات</button>
+      <span id="savedMsg" style="display:none;color:var(--mint-500);font-weight:700;font-size:13.5px;margin-inline-start:12px;" data-i18n="settings_saved">تم الحفظ</span>
+    </main>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script src="i18n.js"></script>
+<script>requireAuth();
+applyTheme();
+applyI18n(Store.lang);
+
+document.getElementById('avatarBubble').textContent = initials(Store.user);
+document.getElementById('setName').value = Store.user;
+document.getElementById('setThemeToggle').classList.toggle('on', Store.theme === 'dark');
+
+function syncLangToggles(){
+  document.querySelectorAll('.lang-toggle span').forEach(s=>s.classList.toggle('active', s.dataset.lang === Store.lang));
+}
+syncLangToggles();
+
+function toggleLang(e){
+  const span = e.target.closest('span'); if(!span) return;
+  Store.lang = span.dataset.lang; applyI18n(Store.lang); syncLangToggles();
+}
+document.getElementById('langToggle').addEventListener('click', toggleLang);
+document.getElementById('langToggle2').addEventListener('click', toggleLang);
+
+document.getElementById('setThemeToggle').addEventListener('click', (e)=>{
+  e.currentTarget.classList.toggle('on');
+  Store.theme = e.currentTarget.classList.contains('on') ? 'dark' : 'light';
+  applyTheme();
+});
+
+['notifHigh','notifMid','notifDigest'].forEach(id=>{
+  document.getElementById(id).addEventListener('click', (e)=>e.currentTarget.classList.toggle('on'));
+});
+
+document.getElementById('saveBtn').addEventListener('click', ()=>{
+  Store.user = document.getElementById('setName').value.trim() || Store.user;
+  document.getElementById('avatarBubble').textContent = initials(Store.user);
+  const msg = document.getElementById('savedMsg');
+  msg.style.display = 'inline';
+  setTimeout(()=>msg.style.display = 'none', 2200);
+});
+
+document.getElementById('logoutBtn').addEventListener('click', (e)=>{ e.preventDefault(); Store.logout(); window.location.href='login.html'; });
+</script>
+</body>
+</html>

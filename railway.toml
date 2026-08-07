@@ -1,0 +1,11 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile.api"
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "on_failure"
+
+# ملاحظة: لنشر الموقع الثابت (webapp/) كخدمة منفصلة على Railway، أنشئي
+# خدمة تانية في نفس المشروع بنفس الطريقة لكن بـ dockerfilePath = "Dockerfile.web"

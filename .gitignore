@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+venv/
+.venv/
+data/raw/
+data/processed/
+*.npy
+*.pkl
+.ipynb_checkpoints/
+.DS_Store
+node_modules/
+src/logs/
+
+# ملاحظة: models/survival_mlp*.pt و reports/survival_model_report.json و data/real/*.csv
+# متعمَّد إبقاؤهم متتبَّعين في git، لأنهم نتائج حقيقية مُدرَّبة فعليًا وصغيرة الحجم
+# (مش أوزان الموديل الكبير GRU+CNN اللي محتاج تدريب على PhysioNet — ده لسه هيتستبعد)
+models/sepsis_*.pt

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة المراقبة الإدارية — SepsisWatch</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <svg width="26" height="26" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="16" stroke="#60A5FA" stroke-width="2"/><path d="M6 17h4l2.5-7 4 14 2.5-9 2 2H28" stroke="#60A5FA" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>SepsisWatch
+    </div>
+    <div class="side-section-label">—</div>
+    <a href="dashboard.html" class="side-link"><span class="icon" id="i1"></span><span data-i18n="side_overview">نظرة عامة</span></a>
+    <a href="analyzer.html" class="side-link"><span class="icon" id="iAnalyzer"></span><span data-i18n="side_analyzer">محلل الحالة</span></a>
+    <a href="admin.html" class="side-link active"><span class="icon" id="i2"></span><span data-i18n="side_admin">المراقبة الإدارية</span></a>
+    <div class="side-section-label">—</div>
+    <a href="settings.html" class="side-link"><span class="icon" id="i3"></span><span data-i18n="side_settings">الإعدادات</span></a>
+    <a href="about.html" class="side-link"><span class="icon" id="i4"></span><span data-i18n="side_about">عن المشروع</span></a>
+    <div class="sidebar-footer">
+      <a href="login.html" class="side-link" id="logoutBtn"><span class="icon" id="i5"></span><span data-i18n="side_logout">تسجيل الخروج</span></a>
+    </div>
+  </aside>
+
+  <div>
+    <header class="topbar">
+      <div></div>
+      <div class="topbar-actions">
+        <span class="live-dot" data-i18n="live_label">بث مباشر (تجريبي)</span>
+        <div class="lang-toggle" id="langToggle"><span data-lang="ar">AR</span><span data-lang="en">EN</span></div>
+        <div class="avatar" id="avatarBubble">؟</div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="page-head">
+        <div>
+          <h1 data-i18n="admin_h1">المراقبة الإدارية والتشغيلية</h1>
+          <p data-i18n="admin_sub">إحصائيات حيّة من سجل التنبؤات الفعلي على الـ API (SQLite)</p>
+        </div>
+        <svg width="90" height="64" viewBox="0 0 130 90" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+          <rect x="4" y="4" width="122" height="82" rx="12" fill="var(--mint-100)"/>
+          <rect x="18" y="46" width="14" height="26" rx="3" fill="var(--teal-500)" opacity=".55"/>
+          <rect x="38" y="34" width="14" height="38" rx="3" fill="var(--teal-500)" opacity=".75"/>
+          <rect x="58" y="52" width="14" height="20" rx="3" fill="var(--teal-500)" opacity=".55"/>
+          <rect x="78" y="26" width="14" height="46" rx="3" fill="var(--teal-500)"/>
+          <rect x="98" y="40" width="14" height="32" rx="3" fill="var(--teal-500)" opacity=".75"/>
+        </svg>
+      </div>
+
+      <div class="card panel" style="margin-bottom:20px;background:var(--paper-100);border-color:transparent;">
+        <p style="margin:0;font-size:13.5px;color:var(--ink-700);line-height:1.8;" data-i18n="admin_note">الأرقام دي بتتقرأ مباشرة من نقطة <span class="mono">/admin/stats</span>على السيرفر الخلفي.
+لو السيرفر مش شغال دلوقتي، بتظهر بيانات تجريبية بدلًا منها فقط لغرض العرض.
+        </p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="card kpi-card">
+          <div class="label" data-i18n="admin_total">إجمالي التنبؤات المسجّلة</div>
+          <div class="value" id="statTotal">0</div>
+        </div>
+        <div class="card kpi-card">
+          <div class="label" data-i18n="admin_avg">متوسط درجة الخطورة</div>
+          <div class="value" id="statAvg">0%</div>
+        </div>
+        <div class="card kpi-card">
+          <div class="label" data-i18n="admin_critical">عدد الحالات الحرجة (≥70%)</div>
+          <div class="value" style="color:var(--coral-500);" id="statCritical">0</div>
+        </div>
+        <div class="card kpi-card">
+          <div class="label" data-i18n="admin_uptime">حالة الخادم</div>
+          <div class="value" style="font-size:16px;" id="statHealth">—</div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card panel">
+          <div class="panel-head"><h3 data-i18n="admin_hourly">التنبؤات خلال آخر 24 ساعة</h3></div>
+          <div id="hourlyChart"></div>
+        </div>
+        <div class="card panel">
+          <div class="panel-head"><h3 data-i18n="admin_stack">تكامل المراقبة الإنتاجية (اختياري)</h3></div>
+          <ul class="widget-list">
+            <li><span>Prometheus metrics endpoint</span><span class="mono" style="font-size:12px;">/metrics</span></li>
+            <li><span>Grafana dashboard</span><span data-i18n="admin_grafana_status">جاهز للربط عبر docker-compose</span></li>
+            <li><span>SQLite logging</span><span style="color:var(--mint-500);font-weight:700;">Active</span></li>
+          </ul>
+          <p style="font-size:12.5px;color:var(--ink-500);margin-top:14px;line-height:1.8;" data-i18n="admin_grafana_hint">راجعي DEPLOYMENT.md لتفعيل حاويتَي Prometheus وGrafana الجاهزتين في docker-compose.yml.
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script src="i18n.js"></script>
+<script>requireAuth();
+applyTheme();
+applyI18n(Store.lang);
+document.getElementById('avatarBubble').textContent = initials(Store.user);
+
+document.getElementById('iAnalyzer').innerHTML = Icon.activity;
+['i1','i2','i3','i4','i5'].forEach((id,idx)=>{
+  const map=[Icon.overview,Icon.gear,Icon.gear,Icon.info,Icon.logout];
+  document.getElementById(id).innerHTML = map[idx];
+});
+document.getElementById('logoutBtn').addEventListener('click', (e)=>{ e.preventDefault(); Store.logout(); window.location.href='login.html'; });
+document.getElementById('langToggle').addEventListener('click', (e)=>{
+  const span = e.target.closest('span'); if(!span) return;
+  Store.lang = span.dataset.lang; applyI18n(Store.lang); load();
+});
+
+async function fetchAdminStats(){
+  try{
+    const res = await fetch(`${window.API_BASE_URL}/admin/stats`, {signal: AbortSignal.timeout(2000)});
+    if(!res.ok) throw new Error();
+    return {data: await res.json(), live:true};
+  }catch(e){
+    // السيرفر مقفول: بدل أرقام عشوائية ثابتة، نبني إحصائية حقيقية من نشاط
+    // اليوزر الحالي الفعلي (المرضى اللي حللهم فعليًا وحفظهم عن طريق محلل
+    // الحالة)، فالأرقام بتفرق فعليًا من مستخدم للتاني حسب استخدامه الفعلي.
+    const mine = getMyPatients();
+    const total = mine.length;
+    const avgProb = total ? mine.reduce((s,p)=>s+(p.probability||0),0) / total : 0;
+    const critical = mine.filter(p => (p.probability||0) >= 0.7).length;
+
+    // توزيع الـ 24 ساعة الأخيرة مبني فعليًا على توقيت حفظ كل حالة عند اليوزر
+    const now = Date.now();
+    const buckets = Array.from({length:12}, (_,i)=>({hour: `${String(i*2).padStart(2,'0')}:00`, count:0, sum:0}));
+    mine.forEach(p=>{
+      const t = new Date(p.timestamp).getTime();
+      const hoursAgo = (now - t) / 3600000;
+      if(hoursAgo >= 0 && hoursAgo < 24){
+        const idx = Math.min(11, Math.floor(hoursAgo / 2));
+        buckets[idx].count += 1;
+        buckets[idx].sum += (p.probability||0);
+      }
+    });
+    const hasRealActivity = total > 0;
+    const hourly = buckets.map(b => ({
+      hour: b.hour,
+      count: hasRealActivity ? b.count : Math.round(4 + Math.random()*10),
+      avg_probability: hasRealActivity && b.count ? b.sum / b.count : (hasRealActivity ? 0 : 0.2 + Math.random()*0.3),
+    }));
+
+    return {
+      data: {
+        total_predictions: hasRealActivity ? total : 1834,
+        average_probability: hasRealActivity ? avgProb : 0.284,
+        critical_cases: hasRealActivity ? critical : 47,
+        hourly_breakdown: hourly,
+      },
+      live: false,
+      fromUserActivity: hasRealActivity,
+    };
+  }
+}
+
+async function load(){
+  const {data, live, fromUserActivity} = await fetchAdminStats();
+  countUp(document.getElementById('statTotal'), data.total_predictions);
+  countUp(document.getElementById('statAvg'), Math.round((data.average_probability||0)*100), {suffix:'%'});
+  countUp(document.getElementById('statCritical'), data.critical_cases);
+  document.getElementById('statHealth').textContent = live
+    ? (Store.lang==='en'?'Connected':'متصل')
+    : fromUserActivity
+      ? (Store.lang==='en'?'Local activity (API offline)':'نشاطك المحلي (API غير متصل)')
+      : (Store.lang==='en'?'Demo data (API offline)':'بيانات تجريبية (API غير متصل)');
+
+  const hourly = (data.hourly_breakdown || []).slice().reverse();
+  if(hourly.length){
+    const series = hourly.map(h=>({time: h.hour, count: h.count, risk: (h.avg_probability||0)*100}));
+    document.getElementById('hourlyChart').innerHTML = lineChartSVG(series, ['count','risk'], ['#2563EB','#111827'], 560, 220);
+  }
+}
+load();
+</script>
+</body>
+</html>

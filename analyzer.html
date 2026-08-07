@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>محلل حالة المريض — SepsisWatch</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <svg width="26" height="26" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="16" stroke="#60A5FA" stroke-width="2"/><path d="M6 17h4l2.5-7 4 14 2.5-9 2 2H28" stroke="#60A5FA" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      SepsisWatch
+    </div>
+    <div class="side-section-label">-</div>
+    <a href="dashboard.html" class="side-link"><span class="icon" id="i1"></span><span data-i18n="side_overview">نظرة عامة</span></a>
+    <a href="analyzer.html" class="side-link active"><span class="icon" id="i2"></span><span data-i18n="side_analyzer">محلل الحالة</span></a>
+    <a href="patients.html" class="side-link"><span class="icon" id="i3"></span><span data-i18n="side_patients">قائمة المرضى</span></a>
+    <div class="side-section-label">-</div>
+    <a href="admin.html" class="side-link"><span class="icon" id="i4"></span><span data-i18n="side_admin">المراقبة الإدارية</span></a>
+    <a href="settings.html" class="side-link"><span class="icon" id="i5"></span><span data-i18n="side_settings">الإعدادات</span></a>
+    <a href="about.html" class="side-link"><span class="icon" id="i6"></span><span data-i18n="side_about">عن المشروع</span></a>
+    <div class="sidebar-footer">
+      <a href="login.html" class="side-link" id="logoutBtn"><span class="icon" id="i7"></span><span data-i18n="side_logout">تسجيل الخروج</span></a>
+    </div>
+  </aside>
+
+  <div>
+    <header class="topbar">
+      <div></div>
+      <div class="topbar-actions">
+        <div class="lang-toggle" id="langToggle"><span data-lang="ar">AR</span><span data-lang="en">EN</span></div>
+        <button class="icon-btn" id="themeBtn"><span class="icon" id="i8"></span></button>
+        <a href="settings.html" class="avatar" id="avatarBubble" style="text-decoration:none;">?</a>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="page-head">
+        <div>
+          <h1 data-i18n="analyzer_h1">محلل حالة المريض</h1>
+          <p data-i18n="analyzer_sub">نموذج تعلّم عميق مُدرَّب فعليًا على بيانات إنتان حقيقية، يحسب درجة الخطورة لحظيًا حسب مدخلاتك</p>
+        </div>
+        <svg width="86" height="64" viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+          <rect x="4" y="4" width="112" height="82" rx="12" fill="var(--teal-100)"/>
+          <polyline points="16,55 34,55 40,30 48,68 56,42 64,55 104,55" fill="none" stroke="var(--teal-500)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="40" cy="30" r="3.5" fill="var(--teal-500)"/>
+        </svg>
+      </div>
+
+      <div class="card panel" style="margin-bottom:20px;background:var(--paper-100);border-color:transparent;">
+        <p style="margin:0;font-size:13.3px;color:var(--ink-700);line-height:1.85;" data-i18n="analyzer_disclaimer">
+          أداة توعية تعليمية شخصية، وليست بديلًا عن تقييم طبي مباشر. النتائج تتغيّر مع كل إدخال جديد لأنها ناتجة فعليًا من شبكة عصبية مُدرَّبة، وليست أرقامًا ثابتة.
+        </p>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card panel">
+          <div class="panel-head"><h3 data-i18n="analyzer_form_h">بيانات المريض</h3></div>
+
+          <div class="field">
+            <label data-i18n="f_name">اسم المريض (اختياري)</label>
+            <input id="fName" type="text" data-i18n-placeholder="f_name_ph" placeholder="مثال: مريض جديد">
+          </div>
+          <div class="field">
+            <label data-i18n="f_age">العمر (سنة)</label>
+            <input id="fAge" type="number" min="0" max="110" value="60">
+          </div>
+          <div class="field">
+            <label data-i18n="f_sex">الجنس</label>
+            <select id="fSex">
+              <option value="0" data-i18n="f_male">ذكر</option>
+              <option value="1" data-i18n="f_female">أنثى</option>
+            </select>
+          </div>
+          <div class="field">
+            <label data-i18n="f_episode">عدد نوبات الإنتان السابقة</label>
+            <input id="fEpisode" type="number" min="1" max="10" value="1">
+          </div>
+
+          <div class="panel-head" style="margin-top:8px;"><h3 style="font-size:14px;" data-i18n="f_vitals_h">علامات حيوية إضافية (اختياري، تُستخدم للتوصيات فقط)</h3></div>
+          <div class="grid-2">
+            <div class="field"><label data-i18n="f_hr" style="display:flex;align-items:center;gap:6px;"><svg width="18" height="18" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 18h4l2-6 4 12 3-9 2 3h7" stroke="#DC5F5F" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>معدل النبض</label><input id="fHR" type="number" value="88"></div>
+            <div class="field"><label data-i18n="f_map" style="display:flex;align-items:center;gap:6px;"><svg width="18" height="18" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 7c4 5 7 8.5 7 12a7 7 0 1 1-14 0c0-3.5 3-7 7-12z" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linejoin="round"/></svg>متوسط الضغط</label><input id="fMAP" type="number" value="72"></div>
+            <div class="field"><label data-i18n="f_temp" style="display:flex;align-items:center;gap:6px;"><svg width="18" height="18" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="14.5" y="6" width="5" height="16" rx="2.5" fill="none" stroke="#E08A2B" stroke-width="2.5"/><circle cx="17" cy="25" r="4" fill="#E08A2B"/></svg>الحرارة</label><input id="fTemp" type="number" step="0.1" value="38.1"></div>
+            <div class="field"><label data-i18n="f_resp" style="display:flex;align-items:center;gap:6px;"><svg width="18" height="18" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 8v9M10 12c-2.5 0-4 2-4 5s2 6 5 6c2 0 3-2 3-4M24 12c2.5 0 4 2 4 5s-2 6-5 6c-2 0-3-2-3-4" stroke="#2FA98C" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>معدل التنفس</label><input id="fResp" type="number" value="22"></div>
+          </div>
+
+          <button class="btn btn-primary" id="analyzeBtn" style="width:100%;margin-top:6px;" data-i18n="analyzer_run">تحليل الحالة الآن</button>
+        </div>
+
+        <div class="card panel" id="resultPanel" style="display:none;">
+          <div class="panel-head"><h3 data-i18n="analyzer_result_h">نتيجة التحليل</h3></div>
+          <div class="gauge-wrap">
+            <svg width="180" height="110" viewBox="0 0 180 110">
+              <path d="M10,100 A80,80 0 0 1 170,100" fill="none" stroke="var(--line)" stroke-width="14" stroke-linecap="round"/>
+              <path id="gaugeArc" d="M10,100 A80,80 0 0 1 170,100" fill="none" stroke="#2563EB" stroke-width="14" stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="251"/>
+            </svg>
+            <div class="gauge-value" id="gaugeValue">-</div>
+            <div class="gauge-label" id="gaugeLabel"></div>
+          </div>
+          <div id="explainBars" style="margin-top:10px;"></div>
+          <div style="display:flex;gap:10px;margin-top:16px;">
+            <button class="btn btn-accent btn-sm" id="saveBtn" data-i18n="analyzer_save">حفظ في قائمة مرضاي</button>
+            <button class="btn btn-ghost btn-sm" id="pdfBtn" data-i18n="analyzer_pdf">تحميل تقرير PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="aiSummaryWrap" style="display:none;"></div>
+
+      <div class="card panel" id="treatmentPanel" style="margin-top:20px;display:none;">
+        <div class="panel-head"><h3 data-i18n="treatment_h">خطة رعاية مقترحة</h3></div>
+        <div id="treatmentList"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="model_weights.js"></script>
+<script src="model_engine.js"></script>
+<script src="app.js"></script>
+<script src="i18n.js"></script>
+<script>
+requireAuth();
+applyTheme();
+applyI18n(Store.lang);
+document.getElementById('avatarBubble').textContent = initials(Store.user);
+
+['i1','i2','i3','i4','i5','i6','i7'].forEach((id,idx)=>{
+  const map=[Icon.overview,Icon.activity,Icon.list,Icon.gear,Icon.gear,Icon.info,Icon.logout];
+  document.getElementById(id).innerHTML = map[idx];
+});
+document.getElementById('i8').innerHTML = Icon.moon;
+
+document.getElementById('themeBtn').addEventListener('click', ()=>{ Store.theme = Store.theme==='dark'?'light':'dark'; applyTheme(); });
+document.getElementById('logoutBtn').addEventListener('click', (e)=>{ e.preventDefault(); Store.logout(); window.location.href='login.html'; });
+document.getElementById('langToggle').addEventListener('click', (e)=>{
+  const span = e.target.closest('span'); if(!span) return;
+  Store.lang = span.dataset.lang; applyI18n(Store.lang);
+});
+
+let lastResult = null;
+
+async function callBackendOrLocal(age, sex, episode){
+  try{
+    const res = await fetch(`${window.API_BASE_URL}/predict_survival`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({age_years:age, sex_female:sex, episode_number:episode}),
+      signal: AbortSignal.timeout(1800),
+    });
+    if(!res.ok) throw new Error();
+    const data = await res.json();
+    return { probability: data.risk_probability, factors: data.factors, source: 'api' };
+  }catch(e){
+    const local = survivalRiskExplain(age, sex, episode);
+    return { probability: local.probability, factors: local.factors, source: 'local' };
+  }
+}
+
+function factorLabel(key, lang){
+  const map = lang==='en'
+    ? {age:'Age', episode:'Prior episodes', sex:'Sex'}
+    : {age:'العمر', episode:'النوبات السابقة', sex:'الجنس'};
+  return map[key] || key;
+}
+
+document.getElementById('analyzeBtn').addEventListener('click', async ()=>{
+  const age = parseFloat(document.getElementById('fAge').value) || 0;
+  const sex = parseInt(document.getElementById('fSex').value);
+  const episode = parseInt(document.getElementById('fEpisode').value) || 1;
+
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.textContent = Store.lang === 'en' ? 'Analyzing...' : 'جاري التحليل...';
+
+  const result = await callBackendOrLocal(age, sex, episode);
+  btn.disabled = false;
+  btn.textContent = originalText;
+
+  const prob = result.probability;
+  const cls = riskClass(prob);
+  const color = cls==='high' ? '#111827' : cls==='mid' ? '#2563EB' : '#64748B';
+
+  document.getElementById('resultPanel').style.display = '';
+  document.getElementById('gaugeValue').textContent = Math.round(prob*100) + '%';
+  document.getElementById('gaugeLabel').innerHTML = riskBadge(prob);
+  const arc = document.getElementById('gaugeArc');
+  arc.setAttribute('stroke', color);
+  arc.setAttribute('stroke-dashoffset', String(251 - prob*251));
+
+  document.getElementById('explainBars').innerHTML = result.factors.map((f,i)=>{
+    const barColor = i===0 ? '#111827' : i===1 ? '#2563EB' : '#64748B';
+    const arrow = f.direction === 'up' ? '\u2191' : '\u2193';
+    return `<div style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
+        <span style="font-weight:600;color:var(--navy-900);">${factorLabel(f.key, Store.lang)} <span style="color:${barColor};">${arrow}</span></span>
+        <span class="mono" style="color:var(--ink-500);">${(f.magnitude*100).toFixed(1)}%</span>
+      </div>
+      <div style="height:8px;border-radius:999px;background:var(--paper-100);overflow:hidden;">
+        <div style="height:100%;width:${Math.max(4, f.magnitude*400)}%;background:${barColor};border-radius:999px;"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const vitals = {
+    hr: parseFloat(document.getElementById('fHR').value),
+    map: parseFloat(document.getElementById('fMAP').value),
+    temp: parseFloat(document.getElementById('fTemp').value),
+    resp: parseFloat(document.getElementById('fResp').value),
+  };
+  const plan = generateTreatmentPlan(cls, age, sex, episode, Store.lang, vitals);
+  document.getElementById('treatmentPanel').style.display = '';
+  document.getElementById('treatmentList').innerHTML = plan.map(item => `
+    <div class="insight-card insight-${cls}">
+      <div class="insight-icon">${Icon.pill}</div>
+      <div><b>${item.title}</b><p>${item.text}</p></div>
+    </div>`).join('');
+
+  lastResult = {
+    id: generatePatientId(),
+    name: document.getElementById('fName').value.trim() || (Store.lang==='en' ? 'Unnamed patient' : 'مريض بدون اسم'),
+    age, sex, episode,
+    hr: parseFloat(document.getElementById('fHR').value),
+    map: parseFloat(document.getElementById('fMAP').value),
+    temp: parseFloat(document.getElementById('fTemp').value),
+    resp: parseFloat(document.getElementById('fResp').value),
+    probability: prob,
+    riskClass: cls,
+    factors: result.factors,
+    treatment: plan,
+    source: result.source,
+    timestamp: new Date().toISOString(),
+  };
+
+  const summaryWrap = document.getElementById('aiSummaryWrap');
+  summaryWrap.style.display = '';
+  summaryWrap.innerHTML = aiSummaryPanelHTML(lastResult, Store.lang);
+});
+
+document.getElementById('saveBtn').addEventListener('click', ()=>{
+  if(!lastResult) return;
+  saveMyPatient(lastResult);
+  window.location.href = 'dashboard.html';
+});
+
+document.getElementById('pdfBtn').addEventListener('click', ()=>{
+  if(!lastResult) return;
+  window.print();
+});
+</script>
+</body>
+</html>

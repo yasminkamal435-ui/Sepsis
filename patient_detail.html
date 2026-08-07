@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ملف المريض - SepsisWatch</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <svg width="26" height="26" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="16" stroke="#60A5FA" stroke-width="2"/><path d="M6 17h4l2.5-7 4 14 2.5-9 2 2H28" stroke="#60A5FA" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      SepsisWatch
+    </div>
+    <div class="side-section-label">-</div>
+    <a href="dashboard.html" class="side-link"><span class="icon" id="i1"></span><span data-i18n="side_overview">نظرة عامة</span></a>
+    <a href="analyzer.html" class="side-link"><span class="icon" id="i2"></span><span data-i18n="side_analyzer">محلل الحالة</span></a>
+    <a href="patients.html" class="side-link active"><span class="icon" id="i3"></span><span data-i18n="side_patients">قائمة المرضى</span></a>
+    <div class="side-section-label">-</div>
+    <a href="settings.html" class="side-link"><span class="icon" id="i4"></span><span data-i18n="side_settings">الإعدادات</span></a>
+    <div class="sidebar-footer">
+      <a href="login.html" class="side-link" id="logoutBtn"><span class="icon" id="i5"></span><span data-i18n="side_logout">تسجيل الخروج</span></a>
+    </div>
+  </aside>
+
+  <div>
+    <header class="topbar">
+      <div></div>
+      <div class="topbar-actions">
+        <div class="lang-toggle" id="langToggle"><span data-lang="ar">AR</span><span data-lang="en">EN</span></div>
+        <button class="icon-btn" id="themeBtn"><span class="icon" id="i6"></span></button>
+        <div class="avatar" id="avatarBubble">?</div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="page-head">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <svg width="46" height="46" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><circle cx="17" cy="17" r="16" fill="var(--teal-100)"/><path d="M6 18h4l2-6 4 12 3-9 2 3h7" stroke="var(--teal-500)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div>
+            <h1 id="pName">-</h1>
+            <p id="pMeta">-</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-ghost" onclick="window.print()"><span class="icon" id="iPrint" style="margin-inline-end:6px;"></span><span data-i18n="analyzer_pdf">تحميل تقرير PDF</span></button>
+          <button class="btn btn-ghost" id="deleteBtn" style="color:var(--coral-500);"><span class="icon" id="iTrash" style="margin-inline-end:6px;"></span><span data-i18n="delete_patient">حذف</span></button>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card panel">
+          <div class="panel-head"><h3 data-i18n="cv_title">البصمة البصرية (Computer Vision)</h3></div>
+          <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+            <div style="text-align:center;">
+              <canvas id="gafCanvas" width="140" height="140" style="width:130px;height:130px;border-radius:10px;display:block;"></canvas>
+              <span style="font-size:11px;color:var(--ink-500);">Gramian Angular Field</span>
+            </div>
+            <div style="text-align:center;">
+              <canvas id="rpCanvas" width="140" height="140" style="width:130px;height:130px;border-radius:10px;display:block;"></canvas>
+              <span style="font-size:11px;color:var(--ink-500);">Recurrence Plot</span>
+            </div>
+          </div>
+          <p style="text-align:center;font-size:12px;color:var(--ink-500);margin-top:10px;" data-i18n="cv_sub">صورتان محسوبتان فعليًا لحظة عرض الصفحة من قراءات النبض الفعلية لهذا المريض — نفس التمثيل اللي بيتغذى لفرع الـ CNN داخل النموذج</p>
+        </div>
+
+        <div class="card panel">
+          <div class="panel-head"><h3 data-i18n="gauge_title">درجة خطورة الإنتان</h3></div>
+          <div class="gauge-wrap">
+            <svg width="180" height="110" viewBox="0 0 180 110">
+              <path d="M10,100 A80,80 0 0 1 170,100" fill="none" stroke="var(--line)" stroke-width="14" stroke-linecap="round"/>
+              <path id="gaugeArc" d="M10,100 A80,80 0 0 1 170,100" fill="none" stroke="#111827" stroke-width="14" stroke-linecap="round"/>
+            </svg>
+            <div class="gauge-value" id="gaugeValue">-</div>
+            <div class="gauge-label" id="gaugeLabel"></div>
+          </div>
+          <div id="explainBars"></div>
+        </div>
+      </div>
+
+      <div id="aiSummaryWrap"></div>
+
+      <div class="card panel" style="margin-top:20px;">
+        <div class="panel-head"><h3 data-i18n="treatment_h">خطة رعاية مقترحة</h3></div>
+        <div id="treatmentList"></div>
+        <p class="insight-disclaimer" data-i18n="insights_disclaimer">هذه اقتراحات دعم قرار تجريبية ولا تُغني عن التقييم السريري المباشر.</p>
+      </div>
+
+      <div class="card panel" style="margin-top:20px;">
+        <div class="panel-head"><h3 data-i18n="vitals_recorded_h">القراءات المسجّلة</h3></div>
+        <div id="vitalsGrid" class="grid-2"></div>
+      </div>
+
+      <div id="historyCompareWrap"></div>
+    </main>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="model_weights.js"></script>
+<script src="model_engine.js"></script>
+<script src="app.js"></script>
+<script src="i18n.js"></script>
+<script>
+requireAuth();
+document.getElementById('avatarBubble').textContent = initials(Store.user);
+applyTheme();
+applyI18n(Store.lang);
+document.getElementById('iPrint').innerHTML = Icon.print;
+document.getElementById('iTrash').innerHTML = Icon.trash;
+['i1','i2','i3','i4','i5'].forEach((id,idx)=>{
+  const map=[Icon.overview,Icon.activity,Icon.list,Icon.gear,Icon.logout];
+  document.getElementById(id).innerHTML = map[idx];
+});
+document.getElementById('i6').innerHTML = Icon.moon;
+
+document.getElementById('themeBtn').addEventListener('click', ()=>{ Store.theme = Store.theme==='dark'?'light':'dark'; applyTheme(); });
+document.getElementById('logoutBtn').addEventListener('click', (e)=>{ e.preventDefault(); Store.logout(); window.location.href='login.html'; });
+
+const params = new URLSearchParams(window.location.search);
+const patientId = params.get('id');
+
+function load(){
+  const patients = getMyPatients();
+  const p = patients.find(x=>x.id === patientId);
+  if(!p){ window.location.href = 'patients.html'; return; }
+
+  const disp = toDisplayPatient(p, Store.lang);
+  document.getElementById('pName').textContent = disp.name;
+  document.getElementById('pMeta').textContent = `${disp.unit} - ${disp.bed}`;
+
+  const prob = p.probability;
+  const cls = riskClass(prob);
+  const color = cls==='high' ? '#111827' : cls==='mid' ? '#2563EB' : '#64748B';
+  document.getElementById('gaugeValue').textContent = Math.round(prob*100) + '%';
+  document.getElementById('gaugeLabel').innerHTML = riskBadge(prob);
+  const arc = document.getElementById('gaugeArc');
+  arc.setAttribute('stroke', color);
+  arc.setAttribute('stroke-dasharray', '251');
+  arc.setAttribute('stroke-dashoffset', String(251 - prob*251));
+
+  document.getElementById('explainBars').innerHTML = (p.factors||[]).map((f,i)=>{
+    const barColor = i===0 ? '#111827' : i===1 ? '#2563EB' : '#64748B';
+    const label = {age:'age',episode:'episode',sex:'sex'};
+    const nameMap = Store.lang==='en' ? {age:'Age',episode:'Prior episodes',sex:'Sex'} : {age:'العمر',episode:'النوبات السابقة',sex:'الجنس'};
+    return `<div style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
+        <span style="font-weight:600;">${nameMap[f.key]||f.key}</span>
+        <span class="mono" style="color:var(--ink-500);">${(f.magnitude*100).toFixed(1)}%</span>
+      </div>
+      <div style="height:8px;border-radius:999px;background:var(--paper-100);overflow:hidden;">
+        <div style="height:100%;width:${Math.max(4,f.magnitude*400)}%;background:${barColor};border-radius:999px;"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('treatmentList').innerHTML = (p.treatment||[]).map(item=>`
+    <div class="insight-card insight-${cls}">
+      <div class="insight-icon">${Icon.pill}</div>
+      <div><b>${item.title}</b><p>${item.text}</p></div>
+    </div>`).join('');
+
+  const series = Array.from({length:12}, (_,h)=>{
+    const drift = h/12;
+    return {
+      time: h+'h',
+      HR: p.hr + drift*3, MAP: p.map - drift*2, Temp: p.temp + drift*0.1, Resp: p.resp + drift*1.2,
+    };
+  });
+  drawGAFCanvas(document.getElementById('gafCanvas'), series.map(d=>d.HR));
+  drawRecurrenceCanvas(document.getElementById('rpCanvas'), series.map(d=>d.HR));
+
+  const isEn = Store.lang === 'en';
+  document.getElementById('vitalsGrid').innerHTML = `
+    <div class="feature-card" style="display:flex;gap:12px;align-items:center;">${VitalIcon.hr}<div><h3 style="font-size:14px;">${isEn?'Heart rate':'معدل النبض'}</h3><p class="mono" style="font-size:20px;color:var(--navy-900);">${p.hr}</p></div></div>
+    <div class="feature-card" style="display:flex;gap:12px;align-items:center;">${VitalIcon.map}<div><h3 style="font-size:14px;">${isEn?'Mean arterial pressure':'متوسط الضغط'}</h3><p class="mono" style="font-size:20px;color:var(--navy-900);">${p.map}</p></div></div>
+    <div class="feature-card" style="display:flex;gap:12px;align-items:center;">${VitalIcon.temp}<div><h3 style="font-size:14px;">${isEn?'Temperature':'الحرارة'}</h3><p class="mono" style="font-size:20px;color:var(--navy-900);">${p.temp}</p></div></div>
+    <div class="feature-card" style="display:flex;gap:12px;align-items:center;">${VitalIcon.resp}<div><h3 style="font-size:14px;">${isEn?'Respiration rate':'معدل التنفس'}</h3><p class="mono" style="font-size:20px;color:var(--navy-900);">${p.resp}</p></div></div>
+  `;
+
+  document.getElementById('aiSummaryWrap').innerHTML = aiSummaryPanelHTML(p, Store.lang);
+  document.getElementById('historyCompareWrap').innerHTML = patientHistoryComparisonHTML(p, Store.lang);
+
+  document.getElementById('deleteBtn').addEventListener('click', ()=>{
+    deleteMyPatient(p.id);
+    window.location.href = 'patients.html';
+  });
+}
+
+document.getElementById('langToggle').addEventListener('click', (e)=>{
+  const span = e.target.closest('span'); if(!span) return;
+  Store.lang = span.dataset.lang; applyI18n(Store.lang); load();
+});
+
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قائمة المرضى - SepsisWatch</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <svg width="26" height="26" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="16" stroke="#60A5FA" stroke-width="2"/><path d="M6 17h4l2.5-7 4 14 2.5-9 2 2H28" stroke="#60A5FA" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      SepsisWatch
+    </div>
+    <div class="side-section-label">-</div>
+    <a href="dashboard.html" class="side-link"><span class="icon" id="i1"></span><span data-i18n="side_overview">نظرة عامة</span></a>
+    <a href="analyzer.html" class="side-link"><span class="icon" id="i2"></span><span data-i18n="side_analyzer">محلل الحالة</span></a>
+    <a href="patients.html" class="side-link active"><span class="icon" id="i3"></span><span data-i18n="side_patients">قائمة المرضى</span></a>
+    <div class="side-section-label">-</div>
+    <a href="admin.html" class="side-link"><span class="icon" id="i4"></span><span data-i18n="side_admin">المراقبة الإدارية</span></a>
+    <a href="settings.html" class="side-link"><span class="icon" id="i5"></span><span data-i18n="side_settings">الإعدادات</span></a>
+    <a href="about.html" class="side-link"><span class="icon" id="i6"></span><span data-i18n="side_about">عن المشروع</span></a>
+    <div class="sidebar-footer">
+      <a href="login.html" class="side-link" id="logoutBtn"><span class="icon" id="i7"></span><span data-i18n="side_logout">تسجيل الخروج</span></a>
+    </div>
+  </aside>
+
+  <div>
+    <header class="topbar">
+      <div class="search-box">
+        <span class="icon" id="i8"></span>
+        <input type="text" id="searchInput" data-i18n-placeholder="search_ph" placeholder="ابحث عن مريض...">
+      </div>
+      <div class="topbar-actions">
+        <div class="lang-toggle" id="langToggle"><span data-lang="ar">AR</span><span data-lang="en">EN</span></div>
+        <button class="icon-btn" id="themeBtn"><span class="icon" id="i9"></span></button>
+        <a href="settings.html" class="avatar" id="avatarBubble" style="text-decoration:none;">?</a>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="page-head">
+        <div>
+          <h1 data-i18n="patients_h1">قائمة المرضى الكاملة</h1>
+          <p data-i18n="patients_sub">فلترة وترتيب كل المرضى اللي حللتيهم فعليًا بالنموذج المُدرَّب</p>
+        </div>
+        <a href="analyzer.html" class="btn btn-primary" data-i18n="empty_my_cta">تحليل مريض جديد</a>
+      </div>
+
+      <div class="card panel" style="margin-bottom:20px;">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+          <div class="role-tabs" id="riskFilter">
+            <span class="role-tab active" data-risk="all" data-i18n="filter_all">الكل</span>
+            <span class="role-tab" data-risk="high" data-i18n="filter_high">مرتفع</span>
+            <span class="role-tab" data-risk="mid" data-i18n="filter_mid">متوسط</span>
+            <span class="role-tab" data-risk="low" data-i18n="filter_low">منخفض</span>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="sortBtn" style="margin-inline-start:auto;" data-i18n="sort_by_risk">ترتيب حسب الخطورة</button>
+          <button class="btn btn-ghost btn-sm" id="clearBtn" style="color:var(--coral-500);" data-i18n="clear_my_btn">مسح كل مرضاي</button>
+        </div>
+      </div>
+
+      <div class="card panel">
+        <div id="fullList"></div>
+        <div id="emptyState" class="empty-state" style="display:none;">
+          <svg width="120" height="90" viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto 18px;display:block;">
+            <rect x="15" y="20" width="130" height="85" rx="12" fill="var(--paper-100)" stroke="var(--line)"/>
+            <rect x="32" y="38" width="70" height="9" rx="4.5" fill="var(--line)"/>
+            <rect x="32" y="56" width="96" height="7" rx="3.5" fill="var(--line)" opacity=".6"/>
+            <rect x="32" y="70" width="60" height="7" rx="3.5" fill="var(--line)" opacity=".6"/>
+            <circle cx="118" cy="42" r="16" fill="var(--teal-100)"/>
+            <path d="M111,42 h6 l2,-6 3,12 2,-8 2,3 h5" stroke="var(--teal-500)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3 data-i18n="empty_my_title">لسه ما حللتيش أي حالة</h3>
+          <p data-i18n="empty_my_sub">ابدئي بتحليل أول مريض عشان يظهر هنا</p>
+          <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;">
+            <a href="analyzer.html" class="btn btn-primary" data-i18n="empty_my_cta">تحليل مريض جديد</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="model_weights.js"></script>
+<script src="model_engine.js"></script>
+<script src="app.js"></script>
+<script src="i18n.js"></script>
+<script>
+requireAuth();
+applyTheme();
+applyI18n(Store.lang);
+document.getElementById('avatarBubble').textContent = initials(Store.user);
+
+['i1','i2','i3','i4','i5','i6','i7','i8'].forEach((id,idx)=>{
+  const map=[Icon.overview,Icon.activity,Icon.list,Icon.gear,Icon.gear,Icon.info,Icon.logout,Icon.search];
+  document.getElementById(id).innerHTML = map[idx];
+});
+document.getElementById('i9').innerHTML = Icon.moon;
+
+document.getElementById('themeBtn').addEventListener('click', ()=>{ Store.theme = Store.theme==='dark'?'light':'dark'; applyTheme(); });
+document.getElementById('logoutBtn').addEventListener('click', (e)=>{ e.preventDefault(); Store.logout(); window.location.href='login.html'; });
+document.getElementById('langToggle').addEventListener('click', (e)=>{
+  const span = e.target.closest('span'); if(!span) return;
+  Store.lang = span.dataset.lang; applyI18n(Store.lang); render();
+});
+
+let currentRisk = 'all';
+let sortDesc = true;
+
+function matchesFilters(p, q, lang){
+  const risk = riskClass(p.probability);
+  if(currentRisk !== 'all' && risk !== currentRisk) return false;
+  if(q){
+    const disp = toDisplayPatient(p, lang);
+    if(!(disp.name.includes(q) || p.id.toLowerCase().includes(q.toLowerCase()))) return false;
+  }
+  return true;
+}
+
+function render(){
+  const q = document.getElementById('searchInput').value.trim();
+  let list = getMyPatients().filter(p=>matchesFilters(p,q,Store.lang));
+  list.sort((a,b)=> sortDesc ? b.probability - a.probability : a.probability - b.probability);
+
+  const container = document.getElementById('fullList');
+  const empty = document.getElementById('emptyState');
+  if(list.length === 0){
+    container.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+  container.innerHTML = list.map(p=>{
+    const disp = toDisplayPatient(p, Store.lang);
+    const cls = riskClass(p.probability);
+    const color = cls==='high' ? '#111827' : cls==='mid' ? '#2563EB' : '#64748B';
+    const highClass = cls === 'high' ? 'pulse-ring' : '';
+    return `
+    <a class="patient-row ${highClass}" href="patient_detail.html?id=${encodeURIComponent(p.id)}" style="text-decoration:none;">
+      <div class="p-avatar">${p.age}</div>
+      <div class="p-info"><b>${disp.name}</b><span>${disp.unit} - ${disp.bed}</span></div>
+      <div class="p-prob" style="color:${color};">${Math.round(p.probability*100)}%</div>
+      ${riskBadge(p.probability)}
+    </a>`;
+  }).join('');
+}
+
+document.getElementById('searchInput').addEventListener('input', render);
+document.getElementById('sortBtn').addEventListener('click', ()=>{ sortDesc = !sortDesc; render(); });
+document.getElementById('clearBtn').addEventListener('click', ()=>{ clearMyPatients(); render(); });
+document.getElementById('riskFilter').addEventListener('click', (e)=>{
+  const tab = e.target.closest('.role-tab'); if(!tab) return;
+  currentRisk = tab.dataset.risk;
+  document.querySelectorAll('#riskFilter .role-tab').forEach(t=>t.classList.toggle('active', t===tab));
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
